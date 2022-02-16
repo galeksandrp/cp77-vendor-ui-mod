@@ -156,29 +156,32 @@ private final func RegenerateStock() -> Void {
 
     itemPoolSize = ArraySize(itemPool);
     continueLoop = ArraySize(newStock) < this.GetMaxItemStacksPerVendor();
-    circularIndex = RandRange(0, itemPoolSize);
 
-    i = 0;
-    while i < itemPoolSize && continueLoop {
-      itemPoolIndex = circularIndex % itemPoolSize;
+    if itemPoolSize > 0 { /* VuiMod */
+      circularIndex = RandRange(0, itemPoolSize);
 
-      if this.ShouldRegenerateItem(itemPool[itemPoolIndex].Item().GetID()) {
-        itemStacks = this.CreateStacksFromVendorItem(itemPool[itemPoolIndex], player);
+      i = 0;
+      while i < itemPoolSize && continueLoop {
+        itemPoolIndex = circularIndex % itemPoolSize;
 
-        j = 0;
-        while j < ArraySize(itemStacks) && continueLoop {
-          ArrayPush(newStock, itemStacks[j]);
+        if this.ShouldRegenerateItem(itemPool[itemPoolIndex].Item().GetID()) {
+          itemStacks = this.CreateStacksFromVendorItem(itemPool[itemPoolIndex], player);
 
-          continueLoop = ArraySize(newStock) < this.GetMaxItemStacksPerVendor();
-          j += 1;
+          j = 0;
+          while j < ArraySize(itemStacks) && continueLoop {
+            ArrayPush(newStock, itemStacks[j]);
+
+            continueLoop = ArraySize(newStock) < this.GetMaxItemStacksPerVendor();
+            j += 1;
+          };
         };
+
+        circularIndex += 1;
+        i += 1;
       };
 
-      circularIndex += 1;
-      i += 1;
-    };
-
-    this.m_stock = newStock;
+      this.m_stock = newStock;
+    }
   } else {
     wrappedMethod();
   }
