@@ -13,9 +13,12 @@
 !bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**
 
 # Ignore these files inside below folders
+r6/**/*.md
 r6/scripts/VendorUIImprovements/**/*.txt
 r6/scripts/VendorUIImprovements/**/*.log
 r6/scripts/VendorUIImprovements/**/*.json
+bin/x64/plugins/cyber_engine_tweaks/**/*.md
+bin/x64/plugins/cyber_engine_tweaks/**/*.sqlite3
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.txt
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.log
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.json
