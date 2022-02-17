@@ -149,6 +149,7 @@ public func FilterItem(item: ref<IScriptable>) -> Bool {
       case ItemFilterCategory.AllItems:
         return true;
     };
+
     return true;
   } else {
     return wrappedMethod(item);
@@ -167,6 +168,7 @@ protected func SetupFilters() -> Void {
     ArrayPush(this.m_filters, EnumInt(ItemFilterCategory.Attachments));
     /* ArrayPush(this.m_filters, EnumInt(ItemFilterCategory.Cyberware)); */ /* VuiMod */
     ArrayPush(this.m_filters, EnumInt(ItemFilterCategory.Programs));
+
     super.SetupFilters();
   } else {
     wrappedMethod();

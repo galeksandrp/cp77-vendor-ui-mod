@@ -24,11 +24,9 @@ public class VuiMod {
   public let OptionMoneyAvailability: Int32;
   public let OptionItemPriceMultiplier: Int32;
   public let OptionItemBuyingPriceMultiplier: Int32;
-  public let OptionKnownRecipesHidden: Bool;
   public let OptionTrueSorting: Bool;
   public let OptionDropdownPositionFix: Bool;
   public let OptionInventoryFilterFix: Bool;
-  public let OptionIconicNotificationFix: Bool;
 
   private func Initialize(player: ref<PlayerPuppet>) {
     this.gameInstance = player.GetGame();
@@ -64,11 +62,9 @@ public class VuiMod {
     this.OptionMoneyAvailability = FromVariant(this.GetDefaultSettingFor("MoneyAvailability", false));
     this.OptionItemPriceMultiplier = FromVariant(this.GetDefaultSettingFor("ItemPriceMultiplier", false));
     this.OptionItemBuyingPriceMultiplier = FromVariant(this.GetDefaultSettingFor("ItemBuyingPriceMultiplier", false));
-    this.OptionKnownRecipesHidden = FromVariant(this.GetDefaultSettingFor("KnownRecipesHidden", false));
     this.OptionTrueSorting = FromVariant(this.GetDefaultSettingFor("TrueSorting", false));
     this.OptionDropdownPositionFix = FromVariant(this.GetDefaultSettingFor("DropdownPositionFix", false));
     this.OptionInventoryFilterFix = FromVariant(this.GetDefaultSettingFor("InventoryFilterFix", false));
-    this.OptionIconicNotificationFix = FromVariant(this.GetDefaultSettingFor("IconicNotificationFix", false));
   }
 
   public static func Create(player: ref<PlayerPuppet>) {
@@ -222,6 +218,7 @@ public class VuiMod {
   public func SortItem(dataView: ref<ScriptableDataView>, dataWrapperList: array<ref<InventoryItemDataWrapper>>) -> Bool {
     let compareBuilder: ref<ItemCompareBuilder> = this.CreateItemCompareBuilder(dataWrapperList);
     let isInventory: Bool = this.IsA(n"ItemModeGridView");
+    let isBackpack: Bool = this.IsA(n"BackpackDataView");
 
     if !isInventory {
       compareBuilder = dataView.PreSortingInjection(compareBuilder);
@@ -231,7 +228,11 @@ public class VuiMod {
       if isInventory {
         return this.DefaultSort(this.ArmorDesc(compareBuilder.NewItem(dataView.m_uiScriptableSystem).DPSDesc()));
       } else {
-        return this.DefaultSort(compareBuilder.NewItem(dataView.m_uiScriptableSystem));
+        if isBackpack {
+          return this.DefaultSort(compareBuilder.DLCAddedItem().NewItem(dataView.m_uiScriptableSystem));
+        } else {
+          return this.DefaultSort(compareBuilder.NewItem(dataView.m_uiScriptableSystem));
+        }
       }
     }
 
@@ -287,7 +288,11 @@ public class VuiMod {
       };
     }
 
-    return this.DefaultSort(compareBuilder);
+    if isInventory {
+      return this.DefaultSort(this.ArmorDesc(compareBuilder.DPSDesc()));
+    } else {
+      return this.DefaultSort(compareBuilder);
+    }
   }
 
   public func GetPoolCount(vendor: ref<Vendor>) -> Int32 {
@@ -301,11 +306,12 @@ public class VuiMod {
     return Cast(GameTime.GetSeconds(ingameTime));
   }
 
-  public func CalculateStockAvailability(vendor: ref<Vendor>) -> Int32 {
+  public func CalculateStockAvailability(vendor: ref<Vendor>, opt useAlternativeCyberware: Bool) -> Int32 {
     let poolCount: Float = Cast(this.GetPoolCount(vendor));
     let stockAvailability: Float = MinF(100.0, MaxF(0.0, Cast(this.OptionStockAvailability))) / 100.0;
+    let minimumStockCount: Int32 = useAlternativeCyberware ? 80: 40;
 
-    return RoundF(poolCount * stockAvailability);
+    return Max(minimumStockCount, RoundF(poolCount * stockAvailability));
   }
 
   public func CalculateMoneyAvailability(quantity: Int32) -> Int32 {
@@ -350,7 +356,7 @@ public class VuiMod {
   }
 
   public func GetItemStackQuantity(vendor: ref<Vendor>, player: ref<PlayerPuppet>, quantityMods: array<wref<StatModifier_Record>>) -> Int32 {
-    return Max(1, RoundF(RPGManager.CalculateStatModifiers(quantityMods, vendor.m_gameInstance, player, Cast(vendor.m_vendorObject.GetEntityID()))));
+    return Max(1, RoundF(RPGManager.CalculateStatModifiers(quantityMods, vendor.m_gameInstance, player, Cast<StatsObjectID>(vendor.m_vendorObject.GetEntityID()))));
   }
 
   public func FetchItemPrices(compareBuilder: ref<ItemCompareBuilder>) -> array<Int32> {
@@ -372,29 +378,6 @@ public class VuiMod {
     }
 
     return foundPrices;
-  }
-
-  public func HasPlayerCraftingSpec(vendorItem: wref<VendorItem_Record>) -> Bool {
-    let craftingSystem: ref<CraftingSystem> = CraftingSystem.GetInstance(this.gameInstance);
-
-    return vendorItem.Item().TagsContains(n"Recipe") &&
-      craftingSystem.IsRecipeKnown(TweakDBInterface.GetItemRecipeRecord(vendorItem.Item().GetID()).CraftingResult().Item().GetID(), craftingSystem.m_playerCraftBook);
-  }
-
-  public func OpenIconicDisassemblePopup(controller: wref<InventoryItemModeLogicController>, itemData: InventoryItemData) -> Void {
-    let data: ref<VendorConfirmationPopupData> = new VendorConfirmationPopupData();
-
-    data.notificationName = n"base\\gameplay\\gui\\widgets\\notifications\\vendor_confirmation.inkwidget";
-    data.isBlocking = true;
-    data.useCursor = true;
-    data.queueName = n"modal_popup";
-    data.itemData = itemData;
-    data.quantity = InventoryItemData.GetQuantity(itemData);
-    data.type = VendorConfirmationPopupType.DisassembeIconic;
-
-    controller.m_confirmationPopupToken = controller.m_inventoryController.ShowGameNotification(data);
-    controller.m_confirmationPopupToken.RegisterListener(controller, n"OnIconicDisassemblePopupClosed");
-    controller.m_buttonHintsController.Hide();
   }
 }
 

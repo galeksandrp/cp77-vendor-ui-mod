@@ -85,17 +85,6 @@ local VuiGui = {
             "callback"
           },
         },
-        {
-          name = "KnownRecipesHidden",
-          type = "switch",
-          title = "Known Recipes Hidden",
-          desc = "Hides known recipes from Vendors.",
-          args = {
-            "currentSetting",
-            "defaultSetting",
-            "callback",
-          },
-        },
       }
     },
     {
@@ -157,17 +146,6 @@ local VuiGui = {
             "callback",
           },
         },
-        {
-          name = "IconicNotificationFix",
-          type = "switch",
-          title = "Iconic Notification Fix",
-          desc = "Solves the problem of missing notification message when you want to disassemble Iconic items on the Inventory screen.",
-          args = {
-            "currentSetting",
-            "defaultSetting",
-            "callback",
-          },
-        }
       }
     },
   }
