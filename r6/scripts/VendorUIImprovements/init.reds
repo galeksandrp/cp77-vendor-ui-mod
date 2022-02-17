@@ -295,7 +295,7 @@ public class VuiMod {
     }
   }
 
-  public func GetPoolCount(vendor: ref<Vendor>) -> Int32 {
+  public func GetItemPoolCount(vendor: ref<Vendor>) -> Int32 {
     return vendor.GetVendorRecord().GetItemStockCount();
   }
 
@@ -307,7 +307,7 @@ public class VuiMod {
   }
 
   public func CalculateStockAvailability(vendor: ref<Vendor>, opt useAlternativeCyberware: Bool) -> Int32 {
-    let poolCount: Float = Cast(this.GetPoolCount(vendor));
+    let poolCount: Float = Cast(this.GetItemPoolCount(vendor));
     let stockAvailability: Float = MinF(100.0, MaxF(0.0, Cast(this.OptionStockAvailability))) / 100.0;
     let minimumStockCount: Int32 = useAlternativeCyberware ? 80: 40;
 

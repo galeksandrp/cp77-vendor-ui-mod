@@ -91,7 +91,7 @@ private final func InitializeStock() -> Void {
     /* VuiMod End */
 
     this.m_stockInit = true;
-    useAlternativeCyberware = GameInstance.GetTransactionSystem(this.m_gameInstance).UseAlternativeCyberware();
+    useAlternativeCyberware = GameInstance.GetTransactionSystem(this.m_gameInstance).UseAlternativeCyberware(); /* VuiMod */
 
     if useAlternativeCyberware && this.m_vendorRecord.GetItemStock2Count() > 0 { /* VuiMod */
       this.m_vendorRecord.ItemStock2(itemPool);
