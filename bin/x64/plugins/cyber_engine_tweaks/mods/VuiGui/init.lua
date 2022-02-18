@@ -218,7 +218,8 @@ function VuiGui.new()
       end
     end)
 
-    -- Because we are not able to wrap native functions with redscript
+    -- We should implement PriceManagement here because
+    -- we are not able to wrap native functions with redscript
     ObserveAfter("FullscreenVendorGameController", "Init", function(self)
       if VuiModInstance.SectionPriceManagement and VuiModInstance.OptionEqualPrices then
         local ssc = Game.GetScriptableSystemsContainer()
