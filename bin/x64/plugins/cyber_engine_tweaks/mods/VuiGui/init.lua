@@ -32,7 +32,7 @@ local VuiGui = {
         {
           name = "StockAvailability",
           type = "rangeInt",
-          title = "Stock Availability (%)",
+          title = "Stock Availability (%) [0% = Vanilla]",
           desc = "Changes stock availability for Vendors.",
           args = {
             0,
