@@ -1,6 +1,6 @@
 local VuiGui = {
   title = "VUI GUI",
-  version = "1.31",
+  version = "1.5",
   basePath = "/VuiGui",
   savedSettingsPath = "settings.json",
   savedSettings = {},
@@ -57,14 +57,37 @@ local VuiGui = {
             "callback"
           },
         },
+      }
+    },
+    {
+      name = "PriceManagement",
+      title = "Price Management",
+      desc = "Enables settings related to price management.",
+      args = {
+        "currentSetting",
+        "defaultSetting",
+        "callback",
+      },
+      children = {
         {
-          name = "ItemPriceMultiplier",
+          name = "EqualPrices",
+          type = "switch",
+          title = "Equal Prices",
+          desc = "Equalizes Player prices to Vendor prices.",
+          args = {
+            "currentSetting",
+            "defaultSetting",
+            "callback",
+          },
+        },
+        {
+          name = "PlayerItemPriceMultiplier",
           type = "rangeInt",
-          title = "Price Multiplier (%) [100% = 1]",
-          desc = "Applies price multiplier for both Player & Vendors.",
+          title = "Player Price Multiplier (%) [100% = 1]",
+          desc = "Applies price multiplier only for Player.",
           args = {
             0,
-            200,
+            500,
             1,
             "currentSetting",
             "defaultSetting",
@@ -72,13 +95,13 @@ local VuiGui = {
           },
         },
         {
-          name = "ItemBuyingPriceMultiplier",
+          name = "VendorItemPriceMultiplier",
           type = "rangeInt",
-          title = "Buying Price Multiplier (%) [100% = 1]",
-          desc = "Applies price multiplier only for Vendors. Dependent on \"Price Multiplier\".",
+          title = "Vendor Price Multiplier (%) [100% = 1]",
+          desc = "Applies price multiplier only for Vendors.",
           args = {
             0,
-            200,
+            500,
             1,
             "currentSetting",
             "defaultSetting",
@@ -139,7 +162,7 @@ local VuiGui = {
           name = "InventoryFilterFix",
           type = "switch",
           title = "Inventory Filter Fix",
-          desc = "Solves the problem where Grenades & Consumables would not be displayed when navigating from another Inventory screen.",
+          desc = "Solves the problem that the relevant filters are not selected on the Inventory Screen.",
           args = {
             "currentSetting",
             "defaultSetting",
@@ -151,14 +174,12 @@ local VuiGui = {
   }
 }
 local VuiModInstance = {}
-local nativeSettings
+local vendorMultiplier = nil
+local playerInstance = nil
+local nativeSettings = nil
 
 function UpperFirst(str)
   return (str:gsub("^%l", string.upper))
-end
-
-function Round(num)
-  return num + (2^52 + 2^51) - (2^52 + 2^51)
 end
 
 function DeepCopy(original)
@@ -171,6 +192,7 @@ function DeepCopy(original)
 
 		copy[k] = v
 	end
+
 	return copy
 end
 
@@ -197,32 +219,58 @@ function VuiGui.new()
     end)
 
     -- Because we are not able to wrap native functions with redscript
-    Override("RPGManager", "CalculateSellPrice", function(self, vendor, itemID, wrappedMethod)
-      if VuiModInstance.SectionVendorStock then
-        local sellingPrice = wrappedMethod(vendor, itemID) * 10
-        local sellingPriceMultiplier = math.min(200, math.max(0, VuiModInstance.OptionItemPriceMultiplier)) / 100
+    ObserveAfter("FullscreenVendorGameController", "Init", function(self)
+      if VuiModInstance.SectionPriceManagement and VuiModInstance.OptionEqualPrices then
+        local ssc = Game.GetScriptableSystemsContainer()
+        local MarketSystem = ssc:Get(CName.new('MarketSystem'))
+        local vendorInstance = self.VendorDataManager and MarketSystem:GetVendor(self.VendorDataManager:GetVendorInstance())
 
-        return Round(sellingPrice * sellingPriceMultiplier)
-      else
-        return wrappedMethod(vendor, itemID)
+        vendorMultiplier = vendorInstance and vendorInstance:GetPriceMultiplier() or 1
+        playerInstance = GetPlayer()
       end
     end)
 
-    Override("RPGManager", "CalculateBuyPrice", function(self, vendor, itemID, multiplier, wrappedMethod)
-      if VuiModInstance.SectionVendorStock then
-        local buyingPrice = RPGManager.CalculateSellPrice(vendor, itemID)
-        local buyingPriceMultiplier = math.min(200, math.max(0, VuiModInstance.OptionItemBuyingPriceMultiplier)) / 100
-
-        return Round(buyingPrice * buyingPriceMultiplier)
-      else
-        return wrappedMethod(vendor, itemID, multiplier)
+    ObserveAfter("FullscreenVendorGameController", "OnUninitialize", function(self)
+      if VuiModInstance.SectionPriceManagement and VuiModInstance.OptionEqualPrices then
+        vendorMultiplier = nil
+        playerInstance = nil
       end
+    end)
+
+    Override("RPGManager", "CalculateSellPrice", function(self, vendor, itemID, wrappedMethod)
+      local calculatedPrice = wrappedMethod(vendor, itemID)
+
+      if VuiModInstance.SectionPriceManagement then
+        if VuiModInstance.OptionEqualPrices then
+          calculatedPrice = Max(calculatedPrice, RoundF(RPGManager.CalculateBuyPrice(vendor, itemID, 9999) * (vendorMultiplier or 1)))
+        end
+
+        calculatedPrice =  RoundF(calculatedPrice * (Min(500, Max(0, VuiModInstance.OptionPlayerItemPriceMultiplier)) / 100))
+      end
+
+      return calculatedPrice
+    end)
+
+    Override("RPGManager", "CalculateBuyPrice", function(self, vendor, itemID, multiplier, wrappedMethod)
+      local calculatedPrice = wrappedMethod(vendor, itemID, 1)
+
+      if VuiModInstance.SectionPriceManagement then
+        if VuiModInstance.OptionEqualPrices and multiplier == 9999 then
+          return Max(calculatedPrice, playerInstance and wrappedMethod(playerInstance, itemID, 1) or 0)
+        end
+
+        calculatedPrice =  calculatedPrice * (Min(500, Max(0, VuiModInstance.OptionVendorItemPriceMultiplier)) / 100)
+      end
+
+      return RoundF(calculatedPrice * multiplier)
     end)
   end)
 
   registerForEvent("onShutdown", function()
+    VuiModInstance = {}
+    vendorMultiplier = nil
+    playerInstance = nil
     nativeSettings = nil
-    VuiModInstance = nil
   end)
 end
 
@@ -240,6 +288,8 @@ function VuiGui.LoadSettings()
       for settingKey, setting in pairs(VuiGui.savedSettings) do
         if VuiModInstance[settingKey] ~= nil then
           VuiModInstance[settingKey] = setting
+        else
+          VuiGui.savedSettings[settingKey] = nil
         end
       end
     end
@@ -308,7 +358,7 @@ function VuiGui.GetCallbackFor(setting, isSection)
     VuiModInstance[actualName] = newValue
     VuiGui.savedSettings[actualName] = newValue
 
-    if isSection then
+    if isSection and setting.children then
       if newValue then
         VuiGui.DrawOptions(setting)
       else

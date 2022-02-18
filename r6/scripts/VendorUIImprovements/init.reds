@@ -16,14 +16,18 @@ public class VuiMod {
   public let DefaultSettings: array<array<Variant>>;
 
   public let SectionVendorStock: Bool;
+  public let SectionPriceManagement: Bool;
   public let SectionArmorRaritySort: Bool;
   public let SectionCraftingSpecsFilter: Bool;
 
   public let OptionDaysToRestock: Int32;
   public let OptionStockAvailability: Int32;
   public let OptionMoneyAvailability: Int32;
-  public let OptionItemPriceMultiplier: Int32;
-  public let OptionItemBuyingPriceMultiplier: Int32;
+
+  public let OptionEqualPrices: Bool;
+  public let OptionPlayerItemPriceMultiplier: Int32;
+  public let OptionVendorItemPriceMultiplier: Int32;
+
   public let OptionTrueSorting: Bool;
   public let OptionDropdownPositionFix: Bool;
   public let OptionInventoryFilterFix: Bool;
@@ -39,14 +43,15 @@ public class VuiMod {
 
     this.DefaultSettings = [
       [ToVariant("SectionVendorStock"), ToVariant(true)],
+      [ToVariant("SectionPriceManagement"), ToVariant(true)],
       [ToVariant("SectionArmorRaritySort"), ToVariant(true)],
       [ToVariant("SectionCraftingSpecsFilter"), ToVariant(true)],
       [ToVariant("OptionDaysToRestock"), ToVariant(1)],
       [ToVariant("OptionStockAvailability"), ToVariant(70)],
       [ToVariant("OptionMoneyAvailability"), ToVariant(150)],
-      [ToVariant("OptionItemPriceMultiplier"), ToVariant(85)],
-      [ToVariant("OptionItemBuyingPriceMultiplier"), ToVariant(115)],
-      [ToVariant("OptionKnownRecipesHidden"), ToVariant(true)],
+      [ToVariant("OptionEqualPrices"), ToVariant(false)],
+      [ToVariant("OptionPlayerItemPriceMultiplier"), ToVariant(100)],
+      [ToVariant("OptionVendorItemPriceMultiplier"), ToVariant(100)],
       [ToVariant("OptionTrueSorting"), ToVariant(true)],
       [ToVariant("OptionDropdownPositionFix"), ToVariant(true)],
       [ToVariant("OptionInventoryFilterFix"), ToVariant(true)],
@@ -54,14 +59,18 @@ public class VuiMod {
     ];
 
     this.SectionVendorStock = FromVariant(this.GetDefaultSettingFor("VendorStock", true));
+    this.SectionPriceManagement = FromVariant(this.GetDefaultSettingFor("PriceManagement", true));
     this.SectionArmorRaritySort = FromVariant(this.GetDefaultSettingFor("ArmorRaritySort", true));
     this.SectionCraftingSpecsFilter = FromVariant(this.GetDefaultSettingFor("CraftingSpecsFilter", true));
 
     this.OptionDaysToRestock = FromVariant(this.GetDefaultSettingFor("DaysToRestock", false));
     this.OptionStockAvailability = FromVariant(this.GetDefaultSettingFor("StockAvailability", false));
     this.OptionMoneyAvailability = FromVariant(this.GetDefaultSettingFor("MoneyAvailability", false));
-    this.OptionItemPriceMultiplier = FromVariant(this.GetDefaultSettingFor("ItemPriceMultiplier", false));
-    this.OptionItemBuyingPriceMultiplier = FromVariant(this.GetDefaultSettingFor("ItemBuyingPriceMultiplier", false));
+
+    this.OptionEqualPrices = FromVariant(this.GetDefaultSettingFor("EqualPrices", false));
+    this.OptionPlayerItemPriceMultiplier = FromVariant(this.GetDefaultSettingFor("PlayerItemPriceMultiplier", false));
+    this.OptionVendorItemPriceMultiplier = FromVariant(this.GetDefaultSettingFor("VendorItemPriceMultiplier", false));
+
     this.OptionTrueSorting = FromVariant(this.GetDefaultSettingFor("TrueSorting", false));
     this.OptionDropdownPositionFix = FromVariant(this.GetDefaultSettingFor("DropdownPositionFix", false));
     this.OptionInventoryFilterFix = FromVariant(this.GetDefaultSettingFor("InventoryFilterFix", false));
@@ -215,10 +224,31 @@ public class VuiMod {
     return builder;
   }
 
+  public func DynamicPriceAsc(builder: ref<ItemCompareBuilder>) -> ref<ItemCompareBuilder> {
+    if InventoryItemData.IsVendorItem(builder.itemData1) && InventoryItemData.IsVendorItem(builder.itemData2) {
+      builder.m_compareBuilder.IntAsc(Cast(InventoryItemData.GetBuyPrice(builder.itemData1)), Cast(InventoryItemData.GetBuyPrice(builder.itemData2)));
+    } else {
+      builder.m_compareBuilder.IntAsc(builder.m_sortData1.Price, builder.m_sortData2.Price);
+    }
+
+    return builder;
+  }
+
+  public func DynamicPriceDesc(builder: ref<ItemCompareBuilder>) -> ref<ItemCompareBuilder> {
+    if InventoryItemData.IsVendorItem(builder.itemData1) && InventoryItemData.IsVendorItem(builder.itemData2) {
+      builder.m_compareBuilder.IntDesc(Cast(InventoryItemData.GetBuyPrice(builder.itemData1)), Cast(InventoryItemData.GetBuyPrice(builder.itemData2)));
+    } else {
+      builder.m_compareBuilder.IntDesc(builder.m_sortData1.Price, builder.m_sortData2.Price);
+    }
+
+    return builder;
+  }
+
   public func SortItem(dataView: ref<ScriptableDataView>, dataWrapperList: array<ref<InventoryItemDataWrapper>>) -> Bool {
     let compareBuilder: ref<ItemCompareBuilder> = this.CreateItemCompareBuilder(dataWrapperList);
-    let isInventory: Bool = this.IsA(n"ItemModeGridView");
-    let isBackpack: Bool = this.IsA(n"BackpackDataView");
+    let isInventory: Bool = dataView.IsA(n"ItemModeGridView");
+    let isBackpack: Bool = dataView.IsA(n"BackpackDataView");
+    let isVendor: Bool = dataView.IsA(n"VendorDataView");
 
     if !isInventory {
       compareBuilder = dataView.PreSortingInjection(compareBuilder);
@@ -228,7 +258,7 @@ public class VuiMod {
       if isInventory {
         return this.DefaultSort(this.ArmorDesc(compareBuilder.NewItem(dataView.m_uiScriptableSystem).DPSDesc()));
       } else {
-        if isBackpack {
+        if isBackpack || isVendor {
           return this.DefaultSort(compareBuilder.DLCAddedItem().NewItem(dataView.m_uiScriptableSystem));
         } else {
           return this.DefaultSort(compareBuilder.NewItem(dataView.m_uiScriptableSystem));
@@ -299,6 +329,10 @@ public class VuiMod {
     return vendor.GetVendorRecord().GetItemStockCount();
   }
 
+  public func GetItemStackQuantity(vendor: ref<Vendor>, player: ref<PlayerPuppet>, quantityMods: array<wref<StatModifier_Record>>) -> Int32 {
+    return Max(1, RoundF(RPGManager.CalculateStatModifiers(quantityMods, vendor.m_gameInstance, player, Cast<StatsObjectID>(vendor.m_vendorObject.GetEntityID()))));
+  }
+
   public func CalculateDaysToRestock() -> Float {
     let daysToRestock: Int32 = Min(5, Max(0, this.OptionDaysToRestock));
     let ingameTime: GameTime = GameTime.MakeGameTime(daysToRestock, 0);
@@ -353,31 +387,6 @@ public class VuiMod {
         i += 1;
       };
     }
-  }
-
-  public func GetItemStackQuantity(vendor: ref<Vendor>, player: ref<PlayerPuppet>, quantityMods: array<wref<StatModifier_Record>>) -> Int32 {
-    return Max(1, RoundF(RPGManager.CalculateStatModifiers(quantityMods, vendor.m_gameInstance, player, Cast<StatsObjectID>(vendor.m_vendorObject.GetEntityID()))));
-  }
-
-  public func FetchItemPrices(compareBuilder: ref<ItemCompareBuilder>) -> array<Int32> {
-    let buyPrices: array<Int32> = [
-      Cast(InventoryItemData.GetBuyPrice(compareBuilder.itemData1)),
-      Cast(InventoryItemData.GetBuyPrice(compareBuilder.itemData2))
-    ];
-    let foundPrices: array<Int32> = [
-      compareBuilder.m_sortData1.Price,
-      compareBuilder.m_sortData2.Price
-    ];
-    let i: Int32 = 0;
-
-    while (i < ArraySize(buyPrices)) {
-      if buyPrices[i] != 0 {
-        foundPrices[i] = buyPrices[i];
-      }
-      i += 1;
-    }
-
-    return foundPrices;
   }
 }
 

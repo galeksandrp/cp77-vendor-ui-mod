@@ -1,5 +1,77 @@
 module VendorUIImprovements.CraftingSpecsFilter
 
+@wrapMethod(ItemFilters)
+public final static func GetLabelKey(filterType: ItemFilterType) -> CName {
+  if VuiMod.Get().SectionCraftingSpecsFilter {
+    switch filterType {
+      case ItemFilterType.All:
+        return n"UI-Filters-AllItems";
+      case ItemFilterType.Weapons:
+        return n"UI-Filters-Weapons";
+      case ItemFilterType.Clothes:
+        return n"UI-Filters-Clothes";
+      case ItemFilterType.Consumables:
+        return n"UI-Filters-Consumables";
+      case ItemFilterType.Cyberware:
+        return StringToName(VuiMod.Get().CraftingSpecLocKey); /* VuiMod */
+      case ItemFilterType.Attachments:
+        return n"UI-Filters-Attachments";
+      case ItemFilterType.Quest:
+        return n"UI-Filters-QuestItems";
+      case ItemFilterType.Buyback:
+        return n"UI-Filters-Buyback";
+      case ItemFilterType.LightWeapons:
+        return n"UI-Filters-LightWeapons";
+      case ItemFilterType.HeavyWeapons:
+        return n"UI-Filters-HeavyWeapons";
+      case ItemFilterType.MeleeWeapons:
+        return n"UI-Filters-MeleeWeapons";
+      case ItemFilterType.Hacks:
+        return n"UI-Filters-Hacks";
+    };
+
+    return n"UI-Filters-AllItems";
+  } else {
+    return wrappedMethod(filterType);
+  }
+}
+
+@wrapMethod(ItemFilters)
+public final static func GetIcon(filterType: ItemFilterType) -> String {
+  if VuiMod.Get().SectionCraftingSpecsFilter {
+    switch filterType {
+      case ItemFilterType.All:
+        return "UIIcon.Filter_AllItems";
+      case ItemFilterType.Weapons:
+        return "UIIcon.Filter_Weapons";
+      case ItemFilterType.Clothes:
+        return "UIIcon.Filter_Clothes";
+      case ItemFilterType.Consumables:
+        return "UIIcon.Filter_Consumables";
+      case ItemFilterType.Cyberware:
+        return "UIIcon.LootingShadow_Material"; /* VuiMod */
+      case ItemFilterType.Attachments:
+        return "UIIcon.Filter_Attachments";
+      case ItemFilterType.Quest:
+        return "UIIcon.Filter_QuestItems";
+      case ItemFilterType.Buyback:
+        return "UIIcon.Filter_Buyback";
+      case ItemFilterType.LightWeapons:
+        return "UIIcon.Filter_LightWeapons";
+      case ItemFilterType.HeavyWeapons:
+        return "UIIcon.Filter_HeavyWeapons";
+      case ItemFilterType.MeleeWeapons:
+        return "UIIcon.Filter_MeleeWeapons";
+      case ItemFilterType.Hacks:
+        return "UIIcon.Filter_Hacks";
+    };
+
+    return "UIIcon.Filter_AllItems";
+  } else {
+    return wrappedMethod(filterType);
+  }
+}
+
 @wrapMethod(ItemFilterCategories)
 public final static func GetLabelKey(filterType: ItemFilterCategory) -> CName {
   if VuiMod.Get().SectionCraftingSpecsFilter {

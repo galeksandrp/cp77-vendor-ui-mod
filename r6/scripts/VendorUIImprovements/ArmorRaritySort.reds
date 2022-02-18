@@ -116,11 +116,7 @@ public let itemData2: InventoryItemData;
 @wrapMethod(ItemCompareBuilder)
 public final func PriceAsc() -> ref<ItemCompareBuilder> {
   if VuiMod.Get().SectionArmorRaritySort && VuiMod.Get().OptionTrueSorting {
-    /* VuiMod Start */
-    let itemPrices: array<Int32> = VuiMod.Get().FetchItemPrices(this);
-    this.m_compareBuilder.IntAsc(itemPrices[0], itemPrices[1]);
-    return this;
-    /* VuiMod End */
+    return VuiMod.Get().DynamicPriceAsc(this); /* VuiMod */
   } else {
     return wrappedMethod();
   }
@@ -129,11 +125,7 @@ public final func PriceAsc() -> ref<ItemCompareBuilder> {
 @wrapMethod(ItemCompareBuilder)
 public final func PriceDesc() -> ref<ItemCompareBuilder> {
   if VuiMod.Get().SectionArmorRaritySort && VuiMod.Get().OptionTrueSorting {
-    /* VuiMod Start */
-    let itemPrices: array<Int32> = VuiMod.Get().FetchItemPrices(this);
-    this.m_compareBuilder.IntDesc(itemPrices[0], itemPrices[1]);
-    return this;
-    /* VuiMod End */
+    return VuiMod.Get().DynamicPriceDesc(this); /* VuiMod */
   } else {
     return wrappedMethod();
   }
