@@ -231,10 +231,8 @@ function VuiGui.new()
     end)
 
     ObserveAfter("FullscreenVendorGameController", "OnUninitialize", function(self)
-      if VuiModInstance.SectionPriceManagement and VuiModInstance.OptionEqualPrices then
-        vendorMultiplier = nil
-        playerInstance = nil
-      end
+      vendorMultiplier = nil
+      playerInstance = nil
     end)
 
     Override("RPGManager", "CalculateSellPrice", function(self, vendor, itemID, wrappedMethod)
