@@ -183,17 +183,17 @@ function UpperFirst(str)
 end
 
 function DeepCopy(original)
-	local copy = {}
+  local copy = {}
 
-	for k, v in pairs(original) do
-		if type(v) == "table" then
-			v = DeepCopy(v)
-		end
+  for k, v in pairs(original) do
+    if type(v) == "table" then
+      v = DeepCopy(v)
+    end
 
-		copy[k] = v
-	end
+    copy[k] = v
+  end
 
-	return copy
+  return copy
 end
 
 function VuiGui.new()
