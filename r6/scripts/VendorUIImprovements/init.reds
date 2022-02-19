@@ -54,8 +54,7 @@ public class VuiMod {
       [ToVariant("OptionVendorItemPriceMultiplier"), ToVariant(100)],
       [ToVariant("OptionTrueSorting"), ToVariant(true)],
       [ToVariant("OptionDropdownPositionFix"), ToVariant(true)],
-      [ToVariant("OptionInventoryFilterFix"), ToVariant(true)],
-      [ToVariant("OptionIconicNotificationFix"), ToVariant(true)]
+      [ToVariant("OptionInventoryFilterFix"), ToVariant(true)]
     ];
 
     this.SectionVendorStock = FromVariant(this.GetDefaultSettingFor("VendorStock", true));
