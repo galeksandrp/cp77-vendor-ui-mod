@@ -13,7 +13,7 @@ public final static func GetLabelKey(filterType: ItemFilterType) -> CName {
       case ItemFilterType.Consumables:
         return n"UI-Filters-Consumables";
       case ItemFilterType.Cyberware:
-        return StringToName(VuiMod.Get().CraftingSpecLocKey); /* VuiMod */
+        return StringToName(VuiMod.Get().CraftingSpecsLocKey); /* VuiMod */
       case ItemFilterType.Attachments:
         return n"UI-Filters-Attachments";
       case ItemFilterType.Quest:
@@ -93,7 +93,7 @@ public final static func GetLabelKey(filterType: ItemFilterCategory) -> CName {
       case ItemFilterCategory.Programs:
         return n"UI-Filters-Hacks";
       case ItemFilterCategory.Cyberware:
-        return StringToName(VuiMod.Get().CraftingSpecLocKey); /* VuiMod */
+        return StringToName(VuiMod.Get().CraftingSpecsLocKey); /* VuiMod */
       case ItemFilterCategory.Junk:
         return n"UI-Filters-Junk";
       case ItemFilterCategory.Quest:

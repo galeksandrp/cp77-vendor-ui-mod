@@ -11,7 +11,7 @@ public class VuiMod {
   public let DpsLocKey: String;
   public let ArmorLocKey: String;
   public let RarityLocKey: String;
-  public let CraftingSpecLocKey: String;
+  public let CraftingSpecsLocKey: String;
 
   public let DefaultSettings: array<array<Variant>>;
 
@@ -39,7 +39,7 @@ public class VuiMod {
     this.DpsLocKey = "Lockey#15365";
     this.ArmorLocKey = "Lockey#40290";
     this.RarityLocKey = "Lockey#43282";
-    this.CraftingSpecLocKey = "Lockey#19670";
+    this.CraftingSpecsLocKey = "Lockey#19670";
 
     this.DefaultSettings = [
       [ToVariant("SectionVendorStock"), ToVariant(true)],
