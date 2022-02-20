@@ -144,7 +144,7 @@ local VuiGui = {
       },
     },
     {
-      name = "UiFixes",
+      name = "UIFixes",
       title = "UI Fixes",
       children = {
         {
