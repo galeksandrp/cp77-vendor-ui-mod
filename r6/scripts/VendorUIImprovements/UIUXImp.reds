@@ -1,59 +1,5 @@
 module VendorUIImprovements.UIUXImp
 
-@wrapMethod(VendorItemVirtualController)
-private final func UpdateControllerData() -> Void {
-  if VuiMod.Get().OptionOwnedLabel {
-    let applyDLCAddedIndicator: Bool;
-
-    if this.m_data.IsVendorItem {
-      this.m_itemViewController.Setup(this.m_data.ItemData, ItemDisplayContext.Vendor, this.m_data.IsEnoughMoney, VuiMod.Get().CheckPlayerHasItem(this.m_data.ItemData)); /* VuiMod */
-      applyDLCAddedIndicator = InventoryItemData.GetGameItemData(this.m_data.ItemData).HasTag(n"DLCAdded") && this.m_data.IsDLCAddedActiveItem;
-      this.m_itemViewController.SetDLCNewIndicator(applyDLCAddedIndicator);
-    } else {
-      this.m_itemViewController.Setup(this.m_data.ItemData, ItemDisplayContext.VendorPlayer);
-    };
-
-    this.m_itemViewController.SetComparisonState(this.m_data.ComparisonState);
-    this.m_itemViewController.SetBuybackStack(this.m_data.IsBuybackStack);
-  } else {
-    wrappedMethod();
-  }
-}
-
-@wrapMethod(InventoryItemDisplayController)
-protected func UpdateIndicators() -> Void {
-  if VuiMod.Get().OptionOwnedLabel {
-    let localData: ref<gameItemData>;
-
-    if IsDefined(this.m_labelsContainerController) {
-      this.m_labelsContainerController.Clear();
-    };
-
-    if this.m_owned && (Equals(this.m_itemDisplayContext, ItemDisplayContext.VendorPlayer) || Equals(this.m_itemDisplayContext, ItemDisplayContext.Vendor)) { /* VuiMod */
-      if IsDefined(this.m_labelsContainerController) {
-        this.m_labelsContainerController.Add(ItemLabelType.Owned);
-      };
-    };
-
-    if this.m_isBuybackStack {
-      this.m_labelsContainerController.Add(ItemLabelType.Buyback);
-    };
-
-    if this.m_isDLCNewItem {
-      this.m_labelsContainerController.Add(ItemLabelType.DLCNew);
-    };
-
-    localData = InventoryItemData.GetGameItemData(this.m_itemData);
-    if IsDefined(localData) {
-      inkWidgetRef.SetVisible(this.m_questItemMaker, localData.HasTag(n"Quest") || localData.HasTag(n"UnequipBlocked"));
-    } else {
-      inkWidgetRef.SetVisible(this.m_questItemMaker, false);
-    };
-  } else {
-    wrappedMethod();
-  }
-}
-
 @wrapMethod(gameuiInventoryGameController)
 private final func GetEquipmentAreaPaperdollLocation(equipmentArea: gamedataEquipmentArea) -> PaperdollPositionAnimation {
   if VuiMod.Get().OptionDropdownPositionFix {
@@ -138,5 +84,59 @@ protected cb func OnItemChooserItemChanged(e: ref<ItemChooserItemChanged>) -> Bo
     (inkWidgetRef.GetController(this.m_itemGridScrollControllerWidget) as inkScrollController).SetScrollPosition(0.00);
   } else {
     return wrappedMethod(e);
+  }
+}
+
+@wrapMethod(VendorItemVirtualController)
+private final func UpdateControllerData() -> Void {
+  if VuiMod.Get().OptionOwnedLabel {
+    let applyDLCAddedIndicator: Bool;
+
+    if this.m_data.IsVendorItem {
+      this.m_itemViewController.Setup(this.m_data.ItemData, ItemDisplayContext.Vendor, this.m_data.IsEnoughMoney, VuiMod.Get().CheckPlayerHasItem(this.m_data.ItemData)); /* VuiMod */
+      applyDLCAddedIndicator = InventoryItemData.GetGameItemData(this.m_data.ItemData).HasTag(n"DLCAdded") && this.m_data.IsDLCAddedActiveItem;
+      this.m_itemViewController.SetDLCNewIndicator(applyDLCAddedIndicator);
+    } else {
+      this.m_itemViewController.Setup(this.m_data.ItemData, ItemDisplayContext.VendorPlayer);
+    };
+
+    this.m_itemViewController.SetComparisonState(this.m_data.ComparisonState);
+    this.m_itemViewController.SetBuybackStack(this.m_data.IsBuybackStack);
+  } else {
+    wrappedMethod();
+  }
+}
+
+@wrapMethod(InventoryItemDisplayController)
+protected func UpdateIndicators() -> Void {
+  if VuiMod.Get().OptionOwnedLabel {
+    let localData: ref<gameItemData>;
+
+    if IsDefined(this.m_labelsContainerController) {
+      this.m_labelsContainerController.Clear();
+    };
+
+    if this.m_owned && (Equals(this.m_itemDisplayContext, ItemDisplayContext.VendorPlayer) || Equals(this.m_itemDisplayContext, ItemDisplayContext.Vendor)) { /* VuiMod */
+      if IsDefined(this.m_labelsContainerController) {
+        this.m_labelsContainerController.Add(ItemLabelType.Owned);
+      };
+    };
+
+    if this.m_isBuybackStack {
+      this.m_labelsContainerController.Add(ItemLabelType.Buyback);
+    };
+
+    if this.m_isDLCNewItem {
+      this.m_labelsContainerController.Add(ItemLabelType.DLCNew);
+    };
+
+    localData = InventoryItemData.GetGameItemData(this.m_itemData);
+    if IsDefined(localData) {
+      inkWidgetRef.SetVisible(this.m_questItemMaker, localData.HasTag(n"Quest") || localData.HasTag(n"UnequipBlocked"));
+    } else {
+      inkWidgetRef.SetVisible(this.m_questItemMaker, false);
+    };
+  } else {
+    wrappedMethod();
   }
 }
