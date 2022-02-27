@@ -3,9 +3,6 @@ module VendorUIImprovements.ArmorRaritySort
 @addField(ScriptableDataView)
 public let m_itemSortMode: ItemSortMode;
 
-@addField(ScriptableDataView)
-public let m_uiScriptableSystem: wref<UIScriptableSystem>;
-
 @addMethod(ScriptableDataView)
 public func PreSortingInjection(builder: ref<ItemCompareBuilder>) -> ref<ItemCompareBuilder> {}
 
@@ -46,46 +43,6 @@ public final func SetSortMode(mode: ItemSortMode) -> Void {
     wrappedMethod(mode);
   } else {
     wrappedMethod(mode);
-  }
-}
-
-@wrapMethod(BackpackDataView)
-public final func BindUIScriptableSystem(uiScriptableSystem: wref<UIScriptableSystem>) -> Void {
-  if VuiMod.Get().SectionArmorRaritySort {
-    super.m_uiScriptableSystem = uiScriptableSystem; /* VuiMod */
-    wrappedMethod(uiScriptableSystem);
-  } else {
-    wrappedMethod(uiScriptableSystem);
-  }
-}
-
-@wrapMethod(CraftingDataView)
-public final func BindUIScriptableSystem(uiScriptableSystem: wref<UIScriptableSystem>) -> Void {
-  if VuiMod.Get().SectionArmorRaritySort {
-    super.m_uiScriptableSystem = uiScriptableSystem; /* VuiMod */
-    wrappedMethod(uiScriptableSystem);
-  } else {
-    wrappedMethod(uiScriptableSystem);
-  }
-}
-
-@wrapMethod(CyberwareDataView)
-public final func BindUIScriptableSystem(uiScriptableSystem: wref<UIScriptableSystem>) -> Void {
-  if VuiMod.Get().SectionArmorRaritySort {
-    super.m_uiScriptableSystem = uiScriptableSystem; /* VuiMod */
-    wrappedMethod(uiScriptableSystem);
-  } else {
-    wrappedMethod(uiScriptableSystem);
-  }
-}
-
-@wrapMethod(ItemModeGridView)
-public final func BindUIScriptableSystem(uiScriptableSystem: wref<UIScriptableSystem>) -> Void {
-  if VuiMod.Get().SectionArmorRaritySort {
-    super.m_uiScriptableSystem = uiScriptableSystem; /* VuiMod */
-    wrappedMethod(uiScriptableSystem);
-  } else {
-    wrappedMethod(uiScriptableSystem);
   }
 }
 

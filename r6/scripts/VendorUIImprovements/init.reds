@@ -134,9 +134,11 @@ public class VuiMod {
   }
 
   public func BuildDataWrapperList(dataView: wref<ScriptableDataView>, left: ref<IScriptable>, right: ref<IScriptable>) -> array<ref<InventoryItemDataWrapper>> {
+    let uiScriptableSystem: wref<UIScriptableSystem> = this.GetUIScriptableSystem(dataView);
+    let itemDataList: array<InventoryItemData>;
+
     let isCrafting: Bool = dataView.IsA(n"CraftingDataView");
     let isRipperdoc: Bool = dataView.IsA(n"CyberwareDataView");
-    let itemDataList: array<InventoryItemData>;
 
     if !isCrafting && !isRipperdoc {
       itemDataList = [
@@ -173,7 +175,7 @@ public class VuiMod {
     let i: Int32 = 0;
     while (i < ArraySize(sortDataList)) {
       if Equals(sortDataList[i].Name, "") {
-        sortDataList[i] = ItemCompareBuilder.BuildInventoryItemSortData(itemDataList[i], dataView.m_uiScriptableSystem);
+        sortDataList[i] = ItemCompareBuilder.BuildInventoryItemSortData(itemDataList[i], uiScriptableSystem);
       };
 
       i += 1;
@@ -241,8 +243,30 @@ public class VuiMod {
     return builder;
   }
 
+  public func GetUIScriptableSystem(dataView: ref<ScriptableDataView>) -> ref<UIScriptableSystem> {
+    if dataView.IsA(n"CraftingDataView") {
+      return dataView as CraftingDataView.m_uiScriptableSystem;
+    } else {
+      if dataView.IsA(n"CyberwareDataView") {
+        return dataView as CyberwareDataView.m_uiScriptableSystem;
+      } else {
+        if dataView.IsA(n"VendorDataView") {
+          return dataView as VendorDataView.m_uiScriptableSystem;
+        } else {
+          if dataView.IsA(n"ItemModeGridView") {
+            return dataView as ItemModeGridView.m_uiScriptableSystem;
+          }
+        }
+      }
+    }
+
+    return dataView as BackpackDataView.m_uiScriptableSystem;
+  }
+
   public func SortItem(dataView: ref<ScriptableDataView>, dataWrapperList: array<ref<InventoryItemDataWrapper>>) -> Bool {
     let compareBuilder: ref<ItemCompareBuilder> = this.CreateItemCompareBuilder(dataWrapperList);
+    let uiScriptableSystem: wref<UIScriptableSystem> = this.GetUIScriptableSystem(dataView);
+
     let isInventory: Bool = dataView.IsA(n"ItemModeGridView");
     let isBackpack: Bool = dataView.IsA(n"BackpackDataView");
     let isVendor: Bool = dataView.IsA(n"VendorDataView");
@@ -253,12 +277,12 @@ public class VuiMod {
 
     if Equals(dataView.m_itemSortMode, ItemSortMode.NewItems) {
       if isInventory {
-        return this.DefaultSort(this.ArmorDesc(compareBuilder.NewItem(dataView.m_uiScriptableSystem).DPSDesc()));
+        return this.DefaultSort(this.ArmorDesc(compareBuilder.NewItem(uiScriptableSystem).DPSDesc()));
       } else {
         if isBackpack || isVendor {
-          return this.DefaultSort(compareBuilder.DLCAddedItem().NewItem(dataView.m_uiScriptableSystem));
+          return this.DefaultSort(compareBuilder.DLCAddedItem().NewItem(uiScriptableSystem));
         } else {
-          return this.DefaultSort(compareBuilder.NewItem(dataView.m_uiScriptableSystem));
+          return this.DefaultSort(compareBuilder.NewItem(uiScriptableSystem));
         }
       }
     }
