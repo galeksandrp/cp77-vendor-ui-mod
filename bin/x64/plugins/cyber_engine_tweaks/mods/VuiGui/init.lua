@@ -1,6 +1,6 @@
 local VuiGui = {
   title = "VUI GUI",
-  version = "1.5.3",
+  version = "1.50.3",
   basePath = "/VuiGui",
   savedSettingsPath = "settings.json",
   savedSettings = {},
