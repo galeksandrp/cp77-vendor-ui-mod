@@ -28,9 +28,10 @@ public class VuiMod {
   public let OptionVendorItemPriceMultiplier: Int32;
 
   public let OptionTrueSorting: Bool;
-  public let OptionDropdownPositionFix: Bool;
-  public let OptionInventoryFilterFix: Bool;
-  public let OptionOwnedLabel: Bool;
+  public let OptionFixDropdownPosition: Bool;
+  public let OptionFixInventoryFilter: Bool;
+  public let OptionAddOwnedLabel: Bool;
+  public let OptionDisableVendorAutoSave: Bool;
 
   private func Initialize(player: ref<PlayerPuppet>) {
     this.gameInstance = player.GetGame();
@@ -52,9 +53,10 @@ public class VuiMod {
       [ToVariant("OptionPlayerItemPriceMultiplier"), ToVariant(100)],
       [ToVariant("OptionVendorItemPriceMultiplier"), ToVariant(100)],
       [ToVariant("OptionTrueSorting"), ToVariant(true)],
-      [ToVariant("OptionDropdownPositionFix"), ToVariant(true)],
-      [ToVariant("OptionInventoryFilterFix"), ToVariant(true)],
-      [ToVariant("OptionOwnedLabel"), ToVariant(false)]
+      [ToVariant("OptionFixDropdownPosition"), ToVariant(true)],
+      [ToVariant("OptionFixInventoryFilter"), ToVariant(true)],
+      [ToVariant("OptionAddOwnedLabel"), ToVariant(false)],
+      [ToVariant("OptionDisableVendorAutoSave"), ToVariant(false)]
     ];
 
     this.SectionVendorStock = FromVariant(this.GetDefaultSettingFor("VendorStock", true));
@@ -71,9 +73,10 @@ public class VuiMod {
     this.OptionVendorItemPriceMultiplier = FromVariant(this.GetDefaultSettingFor("VendorItemPriceMultiplier", false));
 
     this.OptionTrueSorting = FromVariant(this.GetDefaultSettingFor("TrueSorting", false));
-    this.OptionDropdownPositionFix = FromVariant(this.GetDefaultSettingFor("DropdownPositionFix", false));
-    this.OptionInventoryFilterFix = FromVariant(this.GetDefaultSettingFor("InventoryFilterFix", false));
-    this.OptionOwnedLabel = FromVariant(this.GetDefaultSettingFor("OptionOwnedLabel", false));
+    this.OptionFixDropdownPosition = FromVariant(this.GetDefaultSettingFor("FixDropdownPosition", false));
+    this.OptionFixInventoryFilter = FromVariant(this.GetDefaultSettingFor("FixInventoryFilter", false));
+    this.OptionAddOwnedLabel = FromVariant(this.GetDefaultSettingFor("AddOwnedLabel", false));
+    this.OptionDisableVendorAutoSave = FromVariant(this.GetDefaultSettingFor("DisableVendorAutoSave", false));
   }
 
   public static func Create(player: ref<PlayerPuppet>) {

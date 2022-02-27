@@ -148,9 +148,9 @@ local VuiGui = {
       title = "UI & UX Improvements",
       children = {
         {
-          name = "DropdownPositionFix",
+          name = "FixDropdownPosition",
           type = "switch",
-          title = "Dropdown Position Fix",
+          title = "Fix Dropdown Position",
           desc = "Solves the problem of incorrectly placed dropdown position in Cyberware screen.",
           args = {
             "currentSetting",
@@ -159,9 +159,9 @@ local VuiGui = {
           },
         },
         {
-          name = "InventoryFilterFix",
+          name = "FixInventoryFilter",
           type = "switch",
-          title = "Inventory Filter Fix",
+          title = "Fix Inventory Filter",
           desc = "Solves the problem that the relevant filters are not selected on the Inventory Screen.",
           args = {
             "currentSetting",
@@ -170,10 +170,21 @@ local VuiGui = {
           },
         },
         {
-          name = "OwnedLabel",
+          name = "AddOwnedLabel",
           type = "switch",
-          title = "Owned Label",
+          title = "Add Owned Label",
           desc = "Displays \"OWNED\" label for items already owned by the Player in Vendor items.",
+          args = {
+            "currentSetting",
+            "defaultSetting",
+            "callback",
+          },
+        },
+        {
+          name = "DisableVendorAutoSave",
+          type = "switch",
+          title = "Disable Vendor Auto Save",
+          desc = "Toggles the autosave feature on the Vendor screen.",
           args = {
             "currentSetting",
             "defaultSetting",

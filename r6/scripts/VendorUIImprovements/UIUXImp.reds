@@ -2,7 +2,7 @@ module VendorUIImprovements.UIUXImp
 
 @wrapMethod(gameuiInventoryGameController)
 private final func GetEquipmentAreaPaperdollLocation(equipmentArea: gamedataEquipmentArea) -> PaperdollPositionAnimation {
-  if VuiMod.Get().OptionDropdownPositionFix {
+  if VuiMod.Get().OptionFixDropdownPosition {
     switch equipmentArea {
       /* VuiMod Start */
       case gamedataEquipmentArea.AbilityCW:
@@ -42,7 +42,7 @@ private final func GetEquipmentAreaPaperdollLocation(equipmentArea: gamedataEqui
 
 @wrapMethod(InventoryItemModeLogicController)
 private final func IsEquipmentAreaClothing(equipmentArea: gamedataEquipmentArea) -> Bool {
-  if VuiMod.Get().OptionInventoryFilterFix {
+  if VuiMod.Get().OptionFixInventoryFilter {
     return Equals(equipmentArea, gamedataEquipmentArea.Head) || Equals(equipmentArea, gamedataEquipmentArea.Face) || Equals(equipmentArea, gamedataEquipmentArea.OuterChest) || Equals(equipmentArea, gamedataEquipmentArea.InnerChest) || Equals(equipmentArea, gamedataEquipmentArea.Legs) || Equals(equipmentArea, gamedataEquipmentArea.Feet) || Equals(equipmentArea, gamedataEquipmentArea.Outfit);
   } else {
     return wrappedMethod(equipmentArea);
@@ -51,7 +51,7 @@ private final func IsEquipmentAreaClothing(equipmentArea: gamedataEquipmentArea)
 
 @wrapMethod(InventoryItemModeLogicController)
 protected cb func OnItemChooserItemChanged(e: ref<ItemChooserItemChanged>) -> Bool {
-  if VuiMod.Get().OptionInventoryFilterFix {
+  if VuiMod.Get().OptionFixInventoryFilter {
     let itemsToSkip: array<ItemID>;
     let itemViewMode: ItemViewModes = ItemViewModes.Mod;
 
@@ -89,7 +89,7 @@ protected cb func OnItemChooserItemChanged(e: ref<ItemChooserItemChanged>) -> Bo
 
 @wrapMethod(VendorItemVirtualController)
 private final func UpdateControllerData() -> Void {
-  if VuiMod.Get().OptionOwnedLabel {
+  if VuiMod.Get().OptionAddOwnedLabel {
     let applyDLCAddedIndicator: Bool;
 
     if this.m_data.IsVendorItem {
@@ -109,7 +109,7 @@ private final func UpdateControllerData() -> Void {
 
 @wrapMethod(InventoryItemDisplayController)
 protected func UpdateIndicators() -> Void {
-  if VuiMod.Get().OptionOwnedLabel {
+  if VuiMod.Get().OptionAddOwnedLabel {
     let localData: ref<gameItemData>;
 
     if IsDefined(this.m_labelsContainerController) {
@@ -138,5 +138,12 @@ protected func UpdateIndicators() -> Void {
     };
   } else {
     wrappedMethod();
+  }
+}
+
+@wrapMethod(FullscreenVendorGameController)
+private final func RequestAutoSave(opt delay: Float) -> Void {
+  if !VuiMod.Get().OptionDisableVendorAutoSave {
+    wrappedMethod(delay);
   }
 }
