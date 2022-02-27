@@ -144,8 +144,8 @@ local VuiGui = {
       },
     },
     {
-      name = "UIFixes",
-      title = "UI Fixes",
+      name = "UIUXImp",
+      title = "UI & UX Improvements",
       children = {
         {
           name = "DropdownPositionFix",
@@ -163,6 +163,17 @@ local VuiGui = {
           type = "switch",
           title = "Inventory Filter Fix",
           desc = "Solves the problem that the relevant filters are not selected on the Inventory Screen.",
+          args = {
+            "currentSetting",
+            "defaultSetting",
+            "callback",
+          },
+        },
+        {
+          name = "OwnedLabel",
+          type = "switch",
+          title = "Owned Label",
+          desc = "Displays \"OWNED\" label for items already owned by the Player in Vendor items.",
           args = {
             "currentSetting",
             "defaultSetting",
@@ -215,6 +226,30 @@ function VuiGui.new()
         -- print("***************** CET PlayerPuppet OnGameAttached")
         VuiModInstance = VuiMod.Get()
         VuiGui.LoadSettings()
+      end
+    end)
+
+    ObserveAfter("FullscreenVendorGameController", "OnInventoryItemHoverOver", function(self, evt)
+      local itemData = evt.itemData;
+      local name = GetLocalizedText(itemData.Name)
+
+      if StrContains(name, "Anhelo Blanco") then
+        print(" OnInventoryItemHoverOver Name ", GetLocalizedText(itemData.Name));
+        print(" OnInventoryItemHoverOver ItemID ", InventoryItemData.GetID(itemData));
+        print(" OnInventoryItemHoverOver TweakDBID ", itemData.SlotID);
+      end
+    end)
+
+    ObserveAfter("VendorItemVirtualController", "UpdateControllerData", function(self)
+      local itemData = self.data.ItemData
+      local name = GetLocalizedText(itemData.Name)
+
+      if StrContains(name, "Anhelo Blanco") then
+        print(" UpdateControllerData Name |", name .. "|");
+        print(" UpdateControllerData ItemID ", InventoryItemData.GetID(self.data.ItemData));
+        print(" UpdateControllerData TweakDBID ", ItemID.GetTDBID(InventoryItemData.GetID(self.data.ItemData)));
+        print(" UpdateControllerData isOwned ", self.itemViewController.owned);
+        print(" UpdateControllerData PlayerHasItem ", VuiMod.Get():CheckPlayerHasItem(InventoryItemData.GetID(self.data.ItemData)));
       end
     end)
 
