@@ -6,7 +6,6 @@ public let VuiMod: wref<VuiMod>;
 
 public class VuiMod {
   private let gameInstance: GameInstance;
-  private let inventoryManager: ref<InventoryDataManagerV2>;
 
   public let DpsLocKey: String;
   public let ArmorLocKey: String;
@@ -34,7 +33,6 @@ public class VuiMod {
 
   private func Initialize(player: ref<PlayerPuppet>) {
     this.gameInstance = player.GetGame();
-    this.inventoryManager = new InventoryDataManagerV2();
 
     this.DpsLocKey = "Lockey#15365";
     this.ArmorLocKey = "Lockey#40290";
