@@ -17,8 +17,10 @@ r6/**/*.md
 r6/scripts/VendorUIImprovements/**/*.txt
 r6/scripts/VendorUIImprovements/**/*.log
 r6/scripts/VendorUIImprovements/**/*.json
+r6/scripts/VendorUIImprovements/**/__folder_managed_by_vortex
 bin/x64/plugins/cyber_engine_tweaks/**/*.md
 bin/x64/plugins/cyber_engine_tweaks/**/*.sqlite3
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.txt
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.log
 bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/*.json
+bin/x64/plugins/cyber_engine_tweaks/mods/VuiGui/**/__folder_managed_by_vortex

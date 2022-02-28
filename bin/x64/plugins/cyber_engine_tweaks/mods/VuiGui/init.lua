@@ -240,30 +240,6 @@ function VuiGui.new()
       end
     end)
 
-    ObserveAfter("FullscreenVendorGameController", "OnInventoryItemHoverOver", function(self, evt)
-      local itemData = evt.itemData;
-      local name = GetLocalizedText(itemData.Name)
-
-      if StrContains(name, "Anhelo Blanco") then
-        print(" OnInventoryItemHoverOver Name ", GetLocalizedText(itemData.Name));
-        print(" OnInventoryItemHoverOver ItemID ", InventoryItemData.GetID(itemData));
-        print(" OnInventoryItemHoverOver TweakDBID ", itemData.SlotID);
-      end
-    end)
-
-    ObserveAfter("VendorItemVirtualController", "UpdateControllerData", function(self)
-      local itemData = self.data.ItemData
-      local name = GetLocalizedText(itemData.Name)
-
-      if StrContains(name, "Anhelo Blanco") then
-        print(" UpdateControllerData Name |", name .. "|");
-        print(" UpdateControllerData ItemID ", InventoryItemData.GetID(self.data.ItemData));
-        print(" UpdateControllerData TweakDBID ", ItemID.GetTDBID(InventoryItemData.GetID(self.data.ItemData)));
-        print(" UpdateControllerData isOwned ", self.itemViewController.owned);
-        print(" UpdateControllerData PlayerHasItem ", VuiMod.Get():CheckPlayerHasItem(InventoryItemData.GetID(self.data.ItemData)));
-      end
-    end)
-
     -- We should implement PriceManagement here because
     -- we are not able to wrap native functions with redscript
     ObserveAfter("FullscreenVendorGameController", "Init", function(self)
