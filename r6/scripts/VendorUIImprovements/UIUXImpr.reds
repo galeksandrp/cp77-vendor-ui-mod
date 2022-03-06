@@ -1,4 +1,4 @@
-module VendorUIImprovements.UIUXImp
+module VendorUIImprovements.UIUXImpr
 
 @wrapMethod(gameuiInventoryGameController)
 private final func GetEquipmentAreaPaperdollLocation(equipmentArea: gamedataEquipmentArea) -> PaperdollPositionAnimation {

@@ -144,7 +144,7 @@ local VuiGui = {
       },
     },
     {
-      name = "UIUXImp",
+      name = "UIUXImpr",
       title = "UI & UX Improvements",
       children = {
         {
