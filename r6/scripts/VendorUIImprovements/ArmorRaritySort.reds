@@ -88,18 +88,6 @@ public final func PriceDesc() -> ref<ItemCompareBuilder> {
   }
 }
 
-@wrapMethod(BackpackDataView)
-public func SortItem(left: ref<IScriptable>, right: ref<IScriptable>) -> Bool {
-  if VuiMod.Get().SectionArmorRaritySort {
-    /* VuiMod Start */
-    let dataWrapperList: array<ref<InventoryItemDataWrapper>> = VuiMod.Get().BuildDataWrapperList(this, left, right);
-    return VuiMod.Get().SortItem(this, dataWrapperList);
-    /* VuiMod End */
-  } else {
-    return wrappedMethod(left, right);
-  }
-}
-
 @wrapMethod(ItemModeGridView)
 public func SortItem(left: ref<IScriptable>, right: ref<IScriptable>) -> Bool {
  if VuiMod.Get().SectionArmorRaritySort {
