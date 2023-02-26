@@ -281,7 +281,7 @@ public class VuiMod {
       compareBuilder = dataView.PreSortingInjection(compareBuilder);
     }
 
-    if Equals(dataView.m_itemSortMode, ItemSortMode.NewItems) {
+    if Equals(dataView.m_itemSortModeUtils, ItemSortMode.NewItems) {
       if isInventory {
         return this.DefaultSort(this.ArmorDesc(compareBuilder.NewItem(uiScriptableSystem).DPSDesc()));
       } else {
@@ -294,7 +294,7 @@ public class VuiMod {
     }
 
     if VuiMod.Get().OptionTrueSorting {
-      switch dataView.m_itemSortMode {
+      switch dataView.m_itemSortModeUtils {
         case ItemSortMode.NameAsc:
           return compareBuilder.NameAsc().GetBool();
         case ItemSortMode.NameDesc:
@@ -319,7 +319,7 @@ public class VuiMod {
           return compareBuilder.ItemType().QualityDesc().PriceDesc().GetBool();
       };
     } else {
-      switch dataView.m_itemSortMode {
+      switch dataView.m_itemSortModeUtils {
         case ItemSortMode.NameAsc:
           return compareBuilder.NameAsc().QualityDesc().GetBool();
         case ItemSortMode.NameDesc:

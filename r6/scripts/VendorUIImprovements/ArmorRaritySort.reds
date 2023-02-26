@@ -1,7 +1,7 @@
 module VendorUIImprovements.ArmorRaritySort
 
 @addField(ScriptableDataView)
-public let m_itemSortMode: ItemSortMode;
+public let m_itemSortModeUtils: ItemSortMode;
 
 @addMethod(ScriptableDataView)
 public func PreSortingInjection(builder: ref<ItemCompareBuilder>) -> ref<ItemCompareBuilder> {}
@@ -9,7 +9,7 @@ public func PreSortingInjection(builder: ref<ItemCompareBuilder>) -> ref<ItemCom
 @wrapMethod(BackpackDataView)
 public final func SetSortMode(mode: ItemSortMode) -> Void {
   if VuiMod.Get().SectionArmorRaritySort {
-    super.m_itemSortMode = mode; /* VuiMod */
+    super.m_itemSortModeUtils = mode; /* VuiMod */
     wrappedMethod(mode);
   } else {
     wrappedMethod(mode);
@@ -19,7 +19,7 @@ public final func SetSortMode(mode: ItemSortMode) -> Void {
 @wrapMethod(CraftingDataView)
 public final func SetSortMode(mode: ItemSortMode) -> Void {
   if VuiMod.Get().SectionArmorRaritySort {
-    super.m_itemSortMode = mode; /* VuiMod */
+    super.m_itemSortModeUtils = mode; /* VuiMod */
     wrappedMethod(mode);
   } else {
     wrappedMethod(mode);
@@ -29,7 +29,7 @@ public final func SetSortMode(mode: ItemSortMode) -> Void {
 @wrapMethod(CyberwareDataView)
 public final func SetSortMode(mode: ItemSortMode) -> Void {
   if VuiMod.Get().SectionArmorRaritySort {
-    super.m_itemSortMode = mode; /* VuiMod */
+    super.m_itemSortModeUtils = mode; /* VuiMod */
     wrappedMethod(mode);
   } else {
     wrappedMethod(mode);
@@ -39,7 +39,7 @@ public final func SetSortMode(mode: ItemSortMode) -> Void {
 @wrapMethod(ItemModeGridView)
 public final func SetSortMode(mode: ItemSortMode) -> Void {
   if VuiMod.Get().SectionArmorRaritySort {
-    super.m_itemSortMode = mode; /* VuiMod */
+    super.m_itemSortModeUtils = mode; /* VuiMod */
     wrappedMethod(mode);
   } else {
     wrappedMethod(mode);
